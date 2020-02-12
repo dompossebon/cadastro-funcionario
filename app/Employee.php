@@ -13,9 +13,15 @@ class Employee extends Model
     {
         $this->attributes['name'] = strtoupper($value);
     }
+
     public function setEmailAttribute($value)
     {
         $this->attributes['email'] = strtolower($value);
+    }
+
+    public function getPhoneAttribute($value)
+    {
+        return '('.substr($value, 0, 2).')'.substr($value, 2, 5).'-'.substr($value, 7, 4);
     }
 
     public function  employeephoto()

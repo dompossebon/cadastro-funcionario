@@ -85,7 +85,9 @@ class EmployeeController extends Controller
         //
         $employee = Employee::find($id);
 
-        return view('edit', compact('employee'));
+        $phone = substr($employee->phone, 1, 2).substr($employee->phone, 4, 5).substr($employee->phone, 10, 4);
+
+        return view('edit', compact('employee','phone'));
     }
 
     /**

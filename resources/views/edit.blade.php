@@ -22,7 +22,7 @@
                         @include('templates.form.inputEMail', ['value' => $employee->email, 'label' => 'E-mail', 'input' => 'email',
 'attributes' => ['placeholder' => 'E-mail']])
 
-                        @include('templates.form.inputText', ['value' => $employee->phone, 'label' => 'Telefone', 'input' => 'phone',
+                        @include('templates.form.inputText', ['value' => $phone, 'label' => 'Telefone', 'input' => 'phone',
 'attributes' => ['pattern' => '[0-9]+$', 'maxlength' => '11', 'placeholder' => 'Apenas 11 números']])
 
                         @include('templates.form.inputFile', ['label' => 'Trocar Arquivo de Foto', 'input' => 'photo'])

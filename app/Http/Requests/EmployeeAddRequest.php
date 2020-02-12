@@ -19,9 +19,9 @@ class EmployeeAddRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|min:3',
+            'name' => 'required|min:3',
             'email' => 'required|unique:employees,email',
-            'phone' => 'required|integer|min:11',
+            'phone' => 'required|min:11',
         ];
     }
 //|email:rfc,dns
