@@ -20,7 +20,7 @@ class EmployeeController extends Controller
     public function index()
     {
         //
-            $employees = Employee::with('employeephotos')->get();
+            $employees = Employee::with('employeephoto')->get();
 
             return view('listAll', compact('employees'));
     }
