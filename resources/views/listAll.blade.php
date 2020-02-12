@@ -5,9 +5,9 @@
         <div class="row justify-content-center">
             <div class="card">
                 <div class="card-header">
-                    @if(session()->has('message'))
+                    @if(session()->has('success'))
                         <div class="alert alert-success">
-                            {{ session()->get('message') }}
+                            {{ session()->get('success') }}
                         </div>
                     @elseif(session()->has('danger'))
                             <div class="alert alert-danger">
