@@ -21,18 +21,18 @@ Clone o repositório do projeto:
 opção 1: 
 Caso você use HTTPS:
 
-git clone https://github.com/dompossebon/cadastropessoa.git
+git clone https://github.com/dompossebon/cadastro-funcionario.git
 
 opção 2:
 Caso você use SSH:
 
-git clone git@github.com:dompossebon/cadastropessoa.git
+git clone git@github.com:dompossebon/cadastro-funcionario.git
 
 ---------------------------------------------------------
 
 Após a clonagem, entre no diretório da aplicação: 
 
-cd cadastropessoa
+cd cadastro-funcionario
 
 em seguida execute o comandos abaixo:
 
