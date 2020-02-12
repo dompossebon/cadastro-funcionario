@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Employee;
 use App\EmployeePhoto;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -18,11 +20,10 @@ class EmployeeController extends Controller
     public function index()
     {
         //
-        $employees = Employee::with('employeephoto')->get();
+            $employees = Employee::with('employeephotos')->get();
 
-        return view('listAll', compact('employees'));
+            return view('listAll', compact('employees'));
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -51,20 +52,37 @@ class EmployeeController extends Controller
             'photo' => 'mimes:jpeg,bmp,png',
         ])->validate();
 
-        $addEmployee = new Employee();
-        $addEmployee->name = $request->name;
-        $addEmployee->email = $request->email;
-        $addEmployee->phone = $request->phone;
-        $addEmployee->save();
+        try {
+            DB::beginTransaction();
+            $addEmployee = new Employee();
+            $addEmployee->name = $request->name;
+            $addEmployee->email = $request->email;
+            $addEmployee->phone = $request->phone;
+            $addEmployee->save();
+            DB::commit();
 
-        if ($request->hasFile('photo')) {
-            $addEmployeePhoto = new EmployeePhoto();
-            $addEmployeePhoto->employee_id = $addEmployee->id;
-            $addEmployeePhoto->photo = $request->photo->store('public');
-            $addEmployeePhoto->save();
+            if ($request->hasFile('photo')) {
+
+                try {
+                    DB::beginTransaction();
+                    $addEmployeePhoto = new EmployeePhoto();
+                    $addEmployeePhoto->employee_id = $addEmployee->id;
+                    $addEmployeePhoto->photo = $request->photo->store('public');
+                    $addEmployeePhoto->save();
+                    DB::commit();
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    return redirect('/employee-list')->with('danger', 'Erro ao manipular o arquivo de foto do Funcionário!');
+                }
+            }
+            return redirect('/employee-list')->with('success', 'Funcionário Salvo com sucesso!');
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+            return redirect('/employee-list')->with('danger', 'Erro ao tentar Salvar Funcionário!');
+
         }
-
-        return redirect('/employee-list');
     }
 
     /**
@@ -91,10 +109,9 @@ class EmployeeController extends Controller
     {
         //
         $employee = Employee::find($id);
+        $phone = substr($employee->phone, 1, 2) . substr($employee->phone, 4, 5) . substr($employee->phone, 10, 4);
 
-        $phone = substr($employee->phone, 1, 2).substr($employee->phone, 4, 5).substr($employee->phone, 10, 4);
-
-        return view('edit', compact('employee','phone'));
+        return view('edit', compact('employee', 'phone'));
     }
 
     /**
@@ -113,29 +130,52 @@ class EmployeeController extends Controller
             'photo' => 'mimes:jpeg,bmp,png',
         ])->validate();
 
+        try {
 
-        $addEmployee = Employee::find($request->id);
-        $addEmployee->name = $request->name;
-        $addEmployee->email = $request->email;
-        $addEmployee->phone = $request->phone;
-        $addEmployee->save();
+            DB::beginTransaction();
+            $addEmployee = Employee::find($request->id);
+            $addEmployee->name = $request->name;
+            $addEmployee->email = $request->email;
+            $addEmployee->phone = $request->phone;
+            $addEmployee->save();
+            DB::commit();
 
-        if ($request->hasFile('photo')) {
-            $addEmployeePhoto = EmployeePhoto::find($request->id);
-            if (isset($addEmployeePhoto)) {
-                $deleteOrphanImage = $addEmployeePhoto->photo;
-                $addEmployeePhoto->photo = $request->photo->store('public');
-                $addEmployeePhoto->save();
-                Storage::delete($deleteOrphanImage);
-            } else {
-                $addEmployeePhoto = new EmployeePhoto();
-                $addEmployeePhoto->employee_id = $request->id;
-                $addEmployeePhoto->photo = $request->photo->store('public');
-                $addEmployeePhoto->save();
+            if ($request->hasFile('photo')) {
+                $addEmployeePhoto = EmployeePhoto::find($request->id);
+                if (isset($addEmployeePhoto)) {
+
+                    try {
+                        DB::beginTransaction();
+                        $deleteOrphanImage = $addEmployeePhoto->photo;
+                        $addEmployeePhoto->photo = $request->photo->store('public');
+                        $addEmployeePhoto->save();
+                        DB::commit();
+                        Storage::delete($deleteOrphanImage);
+                    } catch (\Exception $e) {
+                        DB::rollBack();
+                        return redirect('/employee-list')->with('danger', 'Erro ao manipular o arquivo de foto do Funcionário!');
+                    }
+
+                } else {
+
+                    try {
+                        DB::beginTransaction();
+                        $addEmployeePhoto = new EmployeePhoto();
+                        $addEmployeePhoto->employee_id = $request->id;
+                        $addEmployeePhoto->photo = $request->photo->store('public');
+                        $addEmployeePhoto->save();
+                        DB::commit();
+                    } catch (\Exception $e) {
+                        DB::rollBack();
+                        return redirect('/employee-list')->with('danger', 'Erro ao manipular o arquivo de foto do Funcionário!');
+                    }
+                }
             }
+            return redirect('/employee-list')->with('success', 'Funcionário Atualizado com sucesso!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect('/employee-list')->with('danger', 'Erro ao tentar Atualizar Funcionário!');
         }
-
-        return redirect('/employee-list');
     }
 
     /**
@@ -144,18 +184,33 @@ class EmployeeController extends Controller
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
         //
+        $id = $request->id;
+
         $addEmployeePhoto = EmployeePhoto::find($id);
+
         if (isset($addEmployeePhoto)) {
-            $deleteOrphanImage = $addEmployeePhoto->photo;
+
+            $deleteOrphanImage = 'teste' . $addEmployeePhoto->photo;
             Storage::delete($deleteOrphanImage);
+
         }
-        $remove = Employee::where('id', $id)->delete();
-        if ($id) {
-            return redirect('/employee-list');
+
+        DB::beginTransaction();
+        try {
+
+            Employee::where('id', $id)->delete();
+            DB::commit();
+
+            return redirect('/employee-list')->with('success', 'Funcionário Excluido com sucesso!');
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+            return redirect('/employee-list')->with('danger', 'Erro ao tentar excluir Funcionário!');
+
         }
-        Employee::findOrFail($id);
     }
 }

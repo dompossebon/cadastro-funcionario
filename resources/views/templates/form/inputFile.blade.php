@@ -9,5 +9,5 @@
     </span>
         <span>{{ $label }}</span>
         <p> {!! Form::file($input) !!} </p>
-</label>
+    </label>
 </div>

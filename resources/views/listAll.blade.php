@@ -5,6 +5,15 @@
         <div class="row justify-content-center">
             <div class="card">
                 <div class="card-header">
+                    @if(session()->has('message'))
+                        <div class="alert alert-success">
+                            {{ session()->get('message') }}
+                        </div>
+                    @elseif(session()->has('danger'))
+                            <div class="alert alert-danger">
+                                {{ session()->get('danger') }}
+                            </div>
+                        @endif
                     <h1>LISTAGEM GERAL DE FUNCIONÁRIOS<h1>
                 </div>
                 <div class="card-body">
