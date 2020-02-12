@@ -22,6 +22,7 @@ class EmployeeAddRequest extends FormRequest
             'name' => 'required|min:3',
             'email' => 'required|unique:employees,email',
             'phone' => 'required|min:11',
+            'photo' => 'mimes:jpeg,bmp,png',
         ];
     }
 //|email:rfc,dns
@@ -35,6 +36,7 @@ class EmployeeAddRequest extends FormRequest
             'phone.required' => 'Preencha o Campo telefone!',
             'phone.integer' => 'O Campo Telefone deve ser apenas numeros!',
             'phone.min' => 'O Campo Telefone deve Ter no mínimo 11 Dígitos!',
+            'photo.mimes' => 'O Campo Foto dever um arquivo do tipo jpeg,bmp ou png!',
         ];
     }
 }
