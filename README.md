@@ -1,4 +1,4 @@
-<p align="center"><img src="https://cdn.essentialnutrition.com.br/wysiwyg/ktmcore/ktmvelo/logo/ho.svg" width="300"></p>
+<p align="center"><img src="https://cdn.essentialnutrition.com.br/wysiwyg/ktmcore/ktmvelo/logo/ho.svg" width="200"></p>
 
 <p align="center">
 Essential Pharma
