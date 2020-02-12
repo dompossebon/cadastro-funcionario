@@ -91,6 +91,10 @@ Então rode o comando:
 
 - php artisan key:generate
 
+Agora vamos criar um link simbolico para a Leitura das Imagens(IMPORTANTE)
+
+- php artisan storage:link
+
 
 e em seguida
 
