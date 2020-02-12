@@ -58,6 +58,9 @@ CREATE SCHEMA `dbEssentialPharma` DEFAULT CHARACTER SET utf8 ;
 CREATE SCHEMA `dbEssentialPharma_test` DEFAULT CHARACTER SET utf8 ;
 
 
+Script completo gerado no Workbench esta na raiz do projeto essentialpharma.sql, porém, basta criar unicamente os dois Bancos e ao final o comando "php artisan migrate:fresh --seed" fará todo o necessário.
+
+
 1- para produção = dbEssentialPharma
 
 2- para testes = dbEssentialPharma_test
