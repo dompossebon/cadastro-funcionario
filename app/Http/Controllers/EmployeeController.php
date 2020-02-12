@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Employee;
 use App\EmployeePhoto;
-use App\Http\Requests\EmployeeAddRequest;
-use App\Http\Requests\EmployeeUpdRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class EmployeeController extends Controller
 {
@@ -41,9 +41,16 @@ class EmployeeController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function store(EmployeeAddRequest $request)
+    public function store(Request $request)
     {
         //
+        Validator::make($request->all(), [
+            'name' => 'required|min:3|max:150',
+            'email' => 'required|unique:employees,email|max:100',
+            'phone' => 'required|min:11',
+            'photo' => 'mimes:jpeg,bmp,png',
+        ])->validate();
+
         $addEmployee = new Employee();
         $addEmployee->name = $request->name;
         $addEmployee->email = $request->email;
@@ -96,9 +103,17 @@ class EmployeeController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(EmployeeUpdRequest $request)
+    public function update(Request $request)
     {
         //
+        Validator::make($request->all(), [
+            'name' => 'required|min:3|max:150',
+            'email' => 'required|max:100',
+            'phone' => 'required|min:11',
+            'photo' => 'mimes:jpeg,bmp,png',
+        ])->validate();
+
+
         $addEmployee = Employee::find($request->id);
         $addEmployee->name = $request->name;
         $addEmployee->email = $request->email;
