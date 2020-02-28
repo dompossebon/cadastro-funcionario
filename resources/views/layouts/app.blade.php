@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>Cadastro de Funcionários</title>
 
     <!-- Scripts -->
 {{--    <script src="{{ asset('./js/mask.js') }}"></script>--}}
@@ -18,7 +18,7 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-{{--    <link href="" rel="stylesheet">--}}
+    <link href="{{ asset('./css/style.css') }}" rel="stylesheet">
 </head>
 <body>
     <div id="app">

@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class EmployeePhoto extends Model
 {
     //
+    protected $fillable= ['employee_id', 'photo'];
+
     protected $primaryKey = 'employee_id';
 
     public function employee()

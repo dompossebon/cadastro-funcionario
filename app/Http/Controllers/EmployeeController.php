@@ -20,9 +20,9 @@ class EmployeeController extends Controller
     public function index()
     {
         //
-            $employees = Employee::with('employeephoto')->get();
+        $employees = Employee::with('employeephoto')->get();
 
-            return view('listAll', compact('employees'));
+        return view('listAll', compact('employees'));
     }
 
     /**
@@ -65,10 +65,12 @@ class EmployeeController extends Controller
 
                 try {
                     DB::beginTransaction();
-                    $addEmployeePhoto = new EmployeePhoto();
-                    $addEmployeePhoto->employee_id = $addEmployee->id;
-                    $addEmployeePhoto->photo = $request->photo->store('public');
-                    $addEmployeePhoto->save();
+
+                    $addEmployee->employeephoto()->create([
+                        'employee_id' => $addEmployee->id,
+                        'photo' => $request->photo->store('public')
+                    ]);
+
                     DB::commit();
                 } catch (\Exception $e) {
                     DB::rollBack();

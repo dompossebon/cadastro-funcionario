@@ -1,0 +1,43 @@
+/*!**/
+/*Alinhamentos, espaçamentos, larguras e alturas*/
+
+/*GLOBALS*/
+/* *!*/
+/**{*/
+/*    !*  correcao do padrao de css  *!*/
+/*    box-sizing: border-box;*/
+/*}*/
+/*html, body {*/
+/*    background-color: #fff;*/
+/*    color: #636b6f;*/
+/*    font-family: 'Nunito', sans-serif;*/
+/*    font-weight: 200;*/
+/*    height: 100vh;*/
+/*    margin: 0;*/
+/*}*/
+
+.card-body-all-row {
+    margin-left: 50px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    align-items: center;
+    padding-top: 20px;
+
+}
+
+.card-body-image {
+    padding-bottom: 20px;
+    width: 100px;
+}
+
+.rowmy {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+}
+
+input {
+    width: 150%;
+}
+
+
